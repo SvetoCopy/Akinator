@@ -1,0 +1,16 @@
+digraph Akinator 
+{ bgcolor="cornsilk1";node[margin = "0.01"];
+"quest789" [shape=Mrecord, style=filled, fillcolor=darksalmon, label = "is human"];
+"quest1835" [shape=Mrecord, style=filled, fillcolor=darksalmon, label = "Sharit za obshesos?"];
+"quest121" [shape=Mrecord, style=filled, fillcolor=darksalmon, label = "y"];
+"leaf121" [shape=Mrecord, style=filled, fillcolor=bisque, label = "y"];
+"leaf429" [shape=Mrecord, style=filled, fillcolor=bisque, label = "elis"];
+"leaf430" [shape=Mrecord, style=filled, fillcolor=bisque, label = "dmit"];
+"leaf353" [shape=Mrecord, style=filled, fillcolor=bisque, label = "ruz"];
+quest789->quest1835
+quest789->leaf353
+quest1835->quest121
+quest1835->leaf430
+quest121->leaf121
+quest121->leaf429
+}

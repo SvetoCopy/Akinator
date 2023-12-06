@@ -4,7 +4,7 @@
 #include <limits.h>
 #include <math.h>
 #include "RuzalLib/stack.h"
-#include "Tree.h"
+#include "AkinatorRead.h"
 
 typedef char* NodeInfo_t;
 
@@ -19,7 +19,6 @@ enum NodeDirection {
 	RIGHT_DIR = 1
 };
 
-void SaveTreeRoot(Node* root, FILE* file);
-int AkinatorGame(Tree* tree, const char* filename);
-void UploadGameBD(Tree* tree, const char* bd_filename);
+int  AkinatorGame(Tree* tree, const char* filename);
+void UploadGameDB(Tree* tree, const char* bd_filename);
 #endif // !AKINATOR_DED

@@ -1,1 +1,1 @@
- (  {is human}  (  {Sharit za obshesos?}  (  {y}  (  {y}  nil  nil  )  (  {elis}  nil  nil  )  )  (  {dmit}  nil  nil  )  )  (  {ruz}  nil  nil  )  ) 
+ (  {Is animal?}  (  {dmit}  nil  nil  )  (  {xz kto ?}  nil  nil  )  ) 

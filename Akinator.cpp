@@ -3,7 +3,7 @@
 
 void ClearInputBuffer() {
 	int c = 0;
-	while ((c = getchar()) != '\n' && c != EOF) {}
+	while (c != '\n' && c != EOF) c = getchar();
 }
 
 #define GET_CHAR_ANSWER(answer_ptr)           \
@@ -13,11 +13,19 @@ void ClearInputBuffer() {
 			ClearInputBuffer();               \
 		} while(0)
 
+#define GET_STRING_ANSWER(answer_ptr)		  \
+		do {								  \
+		printf(">");						  \
+		scanf("%[^\n]", answer_ptr);		  \
+		ClearInputBuffer();					  \
+		} while (0)
 
-#define GET_STRING_ANSWER(answer_ptr)     \
-		printf(">");                      \
-		scanf("%s", answer_ptr);          \
-		ClearInputBuffer();
+#define GET_YES_NO_ANSWER(answer_ptr)		  \
+		do {								  \
+			GET_CHAR_ANSWER(answer_ptr);	  \
+		} while (*answer_ptr != 'y' &&        \
+				 *answer_ptr != 'n')
+			   
 
 Node* AddNewHero(Node* node) {
 	printf("Who is this?\n");
@@ -30,9 +38,10 @@ Node* AddNewHero(Node* node) {
 
 	printf("What is the answer to this question for %s?\n", hero);
 	char answer = {};
-	GET_CHAR_ANSWER(&answer);
+	GET_YES_NO_ANSWER(&answer);
 
 	Node* new_quest = OpNew(question);
+
 	if (answer == 'y') {
 		new_quest->left = OpNew(hero);
 		new_quest->right = node;
@@ -41,6 +50,7 @@ Node* AddNewHero(Node* node) {
 		new_quest->right = OpNew(hero);
 		new_quest->left = node;
 	}
+
 	return new_quest;
 }
 
@@ -51,7 +61,7 @@ Node* GuessingHero(Node* node) {
 		printf("It's a %s?\n", node->data);
 
 		char answer = {};
-		GET_CHAR_ANSWER(&answer);
+		GET_YES_NO_ANSWER(&answer);
 
 		if (answer == 'y') printf("Nice\n");
 		if (answer == 'n') {
@@ -64,7 +74,7 @@ Node* GuessingHero(Node* node) {
 
 	printf("%s\n", node->data);
 	char answer = {};
-	GET_CHAR_ANSWER(&answer);
+	GET_YES_NO_ANSWER(&answer);
 
 	if (answer == 'y') {
 		node->left = GuessingHero(node->left);
@@ -77,6 +87,7 @@ Node* GuessingHero(Node* node) {
 }
 
 bool AkinatorFindHero(Node* root, char* name, Stack* stack) {
+
 	assert(root != nullptr);
 
 	if (root->left == nullptr && root->right == nullptr) {
@@ -96,24 +107,64 @@ bool AkinatorFindHero(Node* root, char* name, Stack* stack) {
 	return false;
 }
 
+void GetHeroProperties(Node* root, Stack* stack) {
+
+	StackVerify(stack);
+	assert(root != nullptr);
+
+	int way = 0;
+	Node* root_var = root;
+
+	while (stack->size != 0) {
+		StackPop(stack, &way);
+
+		if (way == LEFT_DIR) {
+			printf("%s - yes\n", root_var->data);
+			root_var = root_var->left;
+		}
+		else if (way == RIGHT_DIR) {
+			printf("%s - no\n", root_var->data);
+			root_var = root_var->right;
+		}
+	}
+
+	printf("\n");
+}
+
 void AkinatorComparation(Node* root) {
+
+	assert(root != nullptr);
+
 	printf("Write first hero\n");
 	char first_hero[MAX_NODEINFO_SIZE] = {};
 	GET_STRING_ANSWER(&first_hero);
 
-	Stack stack1 = {};
-	StackCtor(&stack1, DEFAULT_TRACK_SIZE, "StackDumpAkinator.txt");
+	Stack first_hero_track = {};
+	StackCtor(&first_hero_track, DEFAULT_TRACK_SIZE, "StackDumpAkinator.txt");
+
+	bool is_found = AkinatorFindHero(root, first_hero, &first_hero_track);
+	if (!is_found) assert("Unknown hero");
 
 	printf("Write second hero\n");
 	char second_hero[MAX_NODEINFO_SIZE] = {};
 	GET_STRING_ANSWER(&second_hero);
 
-	Stack stack2 = {};
-	StackCtor(&stack2, DEFAULT_TRACK_SIZE, "StackDumpAkinator.txt");
+	Stack second_hero_track = {};
+	StackCtor(&second_hero_track, DEFAULT_TRACK_SIZE, "StackDumpAkinator.txt");
 
+	is_found = AkinatorFindHero(root, second_hero, &second_hero_track);
+	assert(is_found && "Unknown hero");
+
+	printf("first hero properties:\n");
+	GetHeroProperties(root, &first_hero_track);
+
+	printf("second hero properties:\n");
+	GetHeroProperties(root, &second_hero_track);
 }
 
 void AkinatorHeroProperties(Node* root) {
+
+	assert(root != nullptr);
 
 	printf("Whose properties do you want to know?\n");
 	char answer[MAX_NODEINFO_SIZE] = {};
@@ -127,38 +178,27 @@ void AkinatorHeroProperties(Node* root) {
 		assert("Unknown hero");
 	}
 
-	int way = 0;
-	Node* root_var = root;
-
-	while (stack.size != 0) {
-		StackPop(&stack, &way);
-
-		if (way == LEFT_DIR) {
-			printf("%s - yes\n", root_var->data);
-			root_var = root_var->left;
-		}
-		else if (way == RIGHT_DIR) {
-			printf("%s - no\n", root_var->data);
-			root_var = root_var->right;
-		}
-	}
+	GetHeroProperties(root, &stack);
 
 	StackDtor(&stack);
 }
 
-void UploadGameBD(Tree* tree, const char* bd_filename) {
+void UploadGameDB(Tree* tree, const char* bd_filename) {
+
+	assert(tree != nullptr);
+
 	FILE* file = {};
 	fopen_s(&file, bd_filename, "r");
 
-	char buffer[MAX_BD_SIZE] = {};
-	fgets(buffer, MAX_BD_SIZE, file);
+	char buffer[MAX_DB_SIZE] = {};
+	fgets(buffer, MAX_DB_SIZE, file);
 
-	ReadNode(buffer, &tree->root);
+	if (strcmp(buffer, "") != 0) ReadNode(buffer, &tree->root);
 
 	fclose(file);
 }
 
-int AkinatorGame(Tree* tree, const char* filename) {
+void PrintWelcome() {
 	printf("-----------------------------------------------------------------------------\n");
 	printf("                **    **  ********  **        **            **      \n");
 	printf("               **    **  ********  **        **         **     **   \n");
@@ -172,6 +212,13 @@ int AkinatorGame(Tree* tree, const char* filename) {
 		"Welcome to the game.To answer the question \"yes\" write \"y\"\n"
 		"To answer \"no\", write \"n\"\n"
 	);
+}
+
+int AkinatorGame(Tree* tree, const char* filename) {
+
+	assert(tree != nullptr);
+
+	PrintWelcome();
 
 	printf("Choose game mode: \n"
            "(1) Guesing\n"
@@ -197,7 +244,7 @@ int AkinatorGame(Tree* tree, const char* filename) {
 	
 	printf("Will you continue the game?\n");
 	answer = {};
-	GET_CHAR_ANSWER(&answer);
+	GET_YES_NO_ANSWER(&answer);
 
 	if (answer == 'y') 
 		AkinatorGame(tree, filename);

@@ -45,8 +45,6 @@ struct StackLogger {
 	const char* name;
 };
 
-
-
 struct DumpInfo {
 	size_t line;
 	const char* obj_name;
@@ -86,7 +84,7 @@ int StackPop(Stack* stk, Elem_t* Ret_value);
 int StackRealloc(Stack* stk, size_t capacity);
 
 int StackDump_(const Stack* stk, const char* file, size_t line, const char* func);
-int StackVerify(const Stack* stk);
+int StackVerify(Stack* stk);
 
 
 #endif // !STACK_DED

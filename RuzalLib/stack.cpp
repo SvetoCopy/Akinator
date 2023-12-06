@@ -4,7 +4,6 @@
 
 #ifdef _DEBUG
 
-
 int StackDump_(const Stack* stk, const char* file, size_t line, const char* func) {
 	// 
 	FILE* f = (stk->logger).file;
@@ -144,7 +143,7 @@ int StackDtor(Stack* stk) {
 		stk->data = nullptr;
 		stk->capacity = 0;
 		stk->size = 0;
-		LogFileDtor(&(stk->logger));
+		// LogFileDtor(&(stk->logger));
 		return 0;
 	}
 	return -1;
@@ -188,6 +187,7 @@ int StackPush(Stack* stk, Elem_t value) {
 	if (StackVerify(stk) != 0) return STACK_ERROR;
 	return 0;
 }
+
 int StackPop(Stack* stk, Elem_t* Ret_value) {
 	if (StackVerify(stk) != 0) return STACK_ERROR;
 	if (stk->size == 0) return STACK_ERROR;

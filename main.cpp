@@ -9,13 +9,13 @@ int main() {
     strcpy(first_data, "xz kto ?");
 
     TreeCtor(&tree, "tree_graph.gv", first_data);
-    UploadGameBD(&tree, "game.txt");
+    UploadGameDB(&tree, "game.txt");
     FILE* file = {};
     AkinatorGame(&tree, "game.txt");
 
     PrintNode(tree.root, IN);
     printf("\n");
-    AkinatorGraphicDump(&tree);
+    TreeGraphicDump(&tree);
 
     return 0;
 }

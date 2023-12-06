@@ -7,6 +7,6 @@
 #define LEAFNODE_COLOR  "bisque"
 #define FREENODE_COLOR  "darkolivegreen1"
 
-int AkinatorGraphicDump(Tree* tree);
+int TreeGraphicDump(Tree* tree);
 
 #endif // !GRAPHIC_DUMP
